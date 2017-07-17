@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>boom</title>
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.boombox {
+    width: 150px;
+    height: 150px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 2px 2px 3px #aaaaaa;
+    bottom: -150px;
+    cursor: pointer;
+}
+
+.boombox::after {
+    content: "\200B";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: 300px;
+    width: 2px;
+}
+h1{
+    text-align: center;
+}
+</style>
+
+<body>
+</body>
+
+</html>
+<script>
+var colorArr = ["red", "green", "yellow", "#666666", "blue"];
+var container = document.querySelector("body");
+var ww = window.innerWidth;
+var timer = null;
+init(5);
+
+function init(num) {
+    for (var i = 0; i < num; i++) {
+        var boomDiv = document.createElement('div');
+        boomDiv.className = 'boombox';
+        var randomX = Math.random() * ww - 150;
+        randomX = Math.max(0, randomX);
+        boomDiv.style.left = randomX + 'px';
+        boomDiv.style.background = colorArr[Math.floor((Math.random() * colorArr.length))];
+        boomDiv.speed = Math.random() * 2 + 1;
+        container.appendChild(boomDiv);
+        timer = setInterval(move, 1000 / 10);
+    }
+};
+
+function move() {
+    var boomDivs = document.querySelectorAll(".boombox");
+    for (var i = 0; i < boomDivs.length; i++) {
+        boomDivs[i].style.top = boomDivs[i].offsetTop - boomDivs[i].speed + 'px';
+    }
+};
+
+function boom() {
+    this.timer = setInterval(function() {
+        this.style.width = this.offsetWidth - 5 + 'px';
+        this.style.height = this.offsetHeight - 5 + 'px';
+        if (parseInt(this.style.width) == 20) {
+            clearInterval(this.timer);
+            this.parentNode.removeChild(this);
+        }
+    }.bind(this), 1000 / 60);
+};
+container.addEventListener("click", function(e) {
+    var target = e.target;
+    if (target.className.toLowerCase() == 'boombox') {
+        boom.call(target);
+        init(1);
+    };
+});
+</script>
